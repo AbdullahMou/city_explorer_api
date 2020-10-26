@@ -125,15 +125,19 @@ function transDate(value) {
 //     ....
 //   ]
 function handleTrails(req, res) {
-    let lat = req.query.latitude;
-    let lon = req.query.longitude;
-
-    superagent.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=5000&key=${KEY2}`)
+    //    let lat = req.query.latitude;
+    //  let lon = req.query.longitude;
+    // console.log('herer', lat, lon);
+    console.log('enter the fun');
+    superagent.get(`https://www.hikingproject.com/data/get-trails?lat=50&lon=50&maxDistance=5000&key=${KEY2}`)
         .then((data) => {
+            console.log('herer', req.query.latitude, req.query.longitude);
             let jObj = data.body.trails;
 
             let trailsArr = jObj.map((ele) => {
                 let locObj = new Trails(ele);
+                console.log(locObj);
+
 
                 return locObj;
             });
