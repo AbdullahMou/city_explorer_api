@@ -43,8 +43,11 @@ function handleWeather(req, res) {
         let jData = require('./data/weather.json');
         let jObj = jData.data;
         let weatherArr = [];
+
         jObj.forEach(ele => {
-            let locObj = new weather(ele.weather.description);
+            let forecastDes = ele.weather.description;
+            let forecastTime = date(Date.parse(ele.valid_date));
+            let locObj = new weather(forecastDes, forecastTime);
             weatherArr.push(locObj);
 
 
@@ -58,8 +61,15 @@ function handleWeather(req, res) {
 
 };
 
-function weather(desc) {
+function weather(desc, time) {
     this.forecast = desc;
+    this.time = time;
+}
+
+function date(value) {
+    var d = (new Date(value) + '').split(' ');
+    return [d[0], d[1], d[2], d[3]].join(' ');
+
 }
 // [
 //     {
