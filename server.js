@@ -66,7 +66,7 @@ function handleWeather(req, res) {
                 console.log(ele);
                 let descript = ele.weather.description;
                 let date = transDate(Date.parse(ele.valid_date));
-                let locObj = new weather(descript, date);
+                let locObj = new weather(descript, date, city);
                 console.log(weatherArr);
 
 
@@ -101,9 +101,10 @@ function handleWeather(req, res) {
 
 // };
 
-function weather(desc, time) {
+function weather(desc, time, city) {
     this.forecast = desc;
     this.time = time;
+    this.city = city;
 }
 
 function transDate(value) {
