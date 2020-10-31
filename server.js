@@ -104,7 +104,6 @@ function Location(search_query, formatted_query, latitude, longitude) {
 
 function handleWeather(req, res) {
     let city = req.query.city;
-    console.log('the key .. ', KEY1);
     console.log('city', city);
 
 
@@ -115,11 +114,10 @@ function handleWeather(req, res) {
             //  console.log(ele);
             let descript = ele.weather.description;
             let date = transDate(Date.parse(ele.valid_date));
-            let locObj = new weather(descript, date, city);
+            let locObj = new Weather(descript, date, city);
 
             return locObj;
         });
-        console.log(weatherArr);
         res.status(200).json(weatherArr);
 
     }).catch((error) => {
@@ -147,7 +145,7 @@ function handleWeather(req, res) {
 
 // };
 
-function weather(desc, time, city) {
+function Weather(desc, time, city) {
     this.forecast = desc;
     this.time = time;
     this.city = city;
@@ -208,11 +206,13 @@ function Trails(trailsData) {
     this.conditions_time = trailsData.conditionDate.toString().slice(11, 20);
 
 }
-client.connect().then(() => {
 
-    app.listen(PORT, () => {
-        console.log('the port is :', PORT);
-    });
-}).catch(err => {
-    console.log('there is an error in connection...', err)
+app.listen(PORT, () => {
+    console.log('the port is :', PORT);
 });
+// client.connect().then(() => {
+//     console.log('client is connected...');
+
+// }).catch(err => {
+//     console.log('there is an error in connection...', err)
+// });
