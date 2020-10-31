@@ -34,6 +34,15 @@ function handleLocation(req, res) {
             gitAPI(city);
 
         }
+    console.log('location .....', city);
+    superagent.get(`https://us1.locationiq.com/v1/search.php?key=${KEY}&q=${city}&format=json`).then(data => {
+        console.log('location inside .....');
+        let jObj = data.body[0];
+        let locObj = new Location(city, jObj.display_name, jObj.lat, jObj.lon);
+        console.log('data is... ', locObj);
+        res.status(200).json(locObj);
+    }).catch((err) => {
+        res.send('location error ... ' + err);
     });
 
 }
@@ -94,31 +103,28 @@ function Location(search_query, formatted_query, latitude, longitude) {
 //   }
 
 function handleWeather(req, res) {
-    let city = req.query.search_query;
+    let city = req.query.city;
+    console.log('the key .. ', KEY1);
+    console.log('city', city);
 
 
+    superagent.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${KEY1}`).then(data => {
+        let jObj = data.body.data;
 
-    superagent.get(`https://api.weatherbit.io/v2.0/forecast/daily?city=${city0}&key=${KEY1}`)
-        .then(data => {
-            let jObj = data.body.data;
-            // console.log(jObj);
-            let weatherArr = jObj.map((ele) => {
-                // console.log(ele);
-                let descript = ele.weather.description;
-                let date = transDate(Date.parse(ele.valid_date));
-                let locObj = new weather(descript, date, city);
-                console.log(weatherArr);
+        let weatherArr = jObj.map((ele) => {
+            //  console.log(ele);
+            let descript = ele.weather.description;
+            let date = transDate(Date.parse(ele.valid_date));
+            let locObj = new weather(descript, date, city);
 
-
-                return locObj;
-            });
-
-
-            res.status(200).json(weatherArr);
-
-        }).catch((err) => {
-            res.send('an error', err);
+            return locObj;
         });
+        console.log(weatherArr);
+        res.status(200).json(weatherArr);
+
+    }).catch((error) => {
+        res.send('an error....', error);
+    });
 }
 // try {
 //         let jData = require('./data/weather.json');
@@ -166,28 +172,26 @@ function transDate(value) {
 //     ....
 //   ]
 function handleTrails(req, res) {
-    let lat = req.query.latitude;
-    let lon = req.query.longitude;
+    let lat = req.query.lat;
+    let lon = req.query.lon;
     console.log('herer', lat, lon);
 
-    superagent.get(`https://www.hikingproject.com/data/get-trails?lat= &lon= &maxDistance=2000&key=${KEY2}`)
-        .then((data) => {
-            console.log('herer', req.query.latitude, req.query.longitude);
-            let jObj = data.body.trails;
+    superagent.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=3000&key=${KEY2}`).then((data) => {
+        // console.log('herer', req.query.latitude, req.query.longitude);
+        let jObj = data.body.trails;
 
-            let trailsArr = jObj.map((ele) => {
-                let locObj = new Trails(ele);
-                console.log(locObj);
+        let trailsArr = jObj.map((ele) => {
+            let locObj = new Trails(ele);
+            // console.log(locObj);
 
 
-                return locObj;
-            });
-            res.status(200).send(trailsArr);
-
-        }).catch((err) => {
-            //console.log('Something went wrong...', err);
-            res.status(500).send('Something went wrong...', err);
+            return locObj;
         });
+        res.status(200).send(trailsArr);
+
+    }).catch(() => {
+        res.status(500).send('Something went wrong');
+    });
 };
 
 
