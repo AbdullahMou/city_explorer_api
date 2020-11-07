@@ -14,6 +14,7 @@ const KEY1 = process.env.MASTER_API_KEY;
 const KEY2 = process.env.HIKING_KEY;
 const KEY3 = process.env.DATABASE_URL;
 
+
 let client = new pg.Client(KEY3);
 
 //app.get('/location', handleLocation);
@@ -25,6 +26,7 @@ app.get('/trails', handleTrails);
 function handleLocation(req, res) {
     //try {
     let city = req.query.city;
+
     database(city).then(data => {
         
         if (data.rowCount > 0) {
@@ -34,6 +36,7 @@ function handleLocation(req, res) {
             gitAPI(city);
 
         }
+
     console.log('location .....', city);
     superagent.get(`https://us1.locationiq.com/v1/search.php?key=${KEY}&q=${city}&format=json`).then(data => {
         console.log('location inside .....');
@@ -104,6 +107,9 @@ function Location(search_query, formatted_query, latitude, longitude) {
 
 function handleWeather(req, res) {
     let city = req.query.city;
+
+
+
     console.log('city', city);
 
 
@@ -114,10 +120,12 @@ function handleWeather(req, res) {
             //  console.log(ele);
             let descript = ele.weather.description;
             let date = transDate(Date.parse(ele.valid_date));
+
             let locObj = new Weather(descript, date, city);
 
             return locObj;
         });
+
         res.status(200).json(weatherArr);
 
     }).catch((error) => {
