@@ -41,7 +41,8 @@ function handleLocation(req, res) {
             });
 
         }
-    });
+
+    })
 }
 
 function fromDataBase(city) {
@@ -109,10 +110,12 @@ function handleWeather(req, res) {
 
             let descript = ele.weather.description;
             let date = transDate(Date.parse(ele.valid_date));
+
             let locObj = new Weather(descript, date, city);
 
             return locObj;
         });
+
         res.status(200).json(weatherArr);
 
     }).catch((error) => {
